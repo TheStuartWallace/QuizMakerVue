@@ -1,0 +1,52 @@
+.sbTitle{
+	font-size: 5rem;
+	font-weight: bold;
+}
+
+.sbEntry{
+	background: var(--backgroundLigherGlobal);
+	border-radius: 5px;
+	width:50vw;
+	min-height:5vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	margin:0.5vh auto;
+}
+
+.sbEntryPos{
+	font-size:150%;
+	font-weight: bold;
+}
+
+.sbEntryName{
+	font-size:120%;
+}
+
+.sbEntryScore{
+	font-size:80%;
+}
+
+@media only screen and (max-width:1000px){
+	.sbEntry{
+		width:80vw;
+	}
+
+	.sbTitle{
+		font-size: 3rem;
+	}
+
+}
+
+
+@media only screen and (max-width:400px){
+	.sbEntry{
+		width:90vw;
+	}
+
+	.sbTitle{
+		font-size: 1.8rem;
+	}
+
+}
