@@ -5,7 +5,7 @@
 			<button class="mpSubmitQuizButton" v-on:click="this.emitter.emit('submit')">Submit quiz and get your link</button>
 		</div>
 
-		<div v-if="showLink" class="submitLink">
+		<div v-if="showLink" class="mpSubmitQuizMessage">
 			<router-link :to="this.resultLink" target="_blank">Cool, here's your link</router-link>
 		</div>
 	</div>

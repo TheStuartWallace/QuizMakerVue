@@ -18,9 +18,10 @@ const routes = [
 		component: MainPage
 	},
 	{
-		path: '/:id',
+		path: '/:id/',
 		name: 'Quiz',
-		component: QuizPage
+		component: QuizPage,
+		pathToRegexpOptions: { strict: true },
 	},
 
 	{

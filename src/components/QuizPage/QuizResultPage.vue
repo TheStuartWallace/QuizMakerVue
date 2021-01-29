@@ -32,7 +32,7 @@
 				<div 	class="qResultLink" 
 						v-show="this.savedLink">
 
-						<router-link target="_blank" :to="this.resultLinkURL">Cool, here's your link</router-link>
+						<router-link target="_blank" :to="this.resultLinkURL" append>Cool, here's your link</router-link>
 				</div>
 		</div>
 	</div>
@@ -73,7 +73,7 @@ export default {
 
 	methods : {
 		saveResult(){
-			QuizMaker.createResult(this.id,this.results).then((data) => {this.resultLinkURL = data; this.savedLink = true;});
+			QuizMaker.createResult(this.id,this.results).then((data) => {this.resultLinkURL = "/"+this.$route.params.id+"/"+data; this.savedLink = true;});
 		}
 	}
 }
