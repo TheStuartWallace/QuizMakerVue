@@ -1,29 +1,29 @@
 <template>
 	<div class="mpWrapper">
-		<div class="qTitle">{{JSON.parse(quizData.title)}}</div>
-		<span class="qQuestion">{{JSON.parse(questionData[this.quiz_state].text)}}</span><br/>
+		<div class="qTitle">{{JSON.parse(quiz.option.title)}}</div>
+		<span class="qQuestion">{{JSON.parse(quiz.question[this.quiz_state].text)}}</span><br/>
 		<br/>
 		<button 	className="qAnswerButton" 
 					v-on:click="this.selectAnswer(1)">
-					{{JSON.parse(questionData[this.quiz_state].answer1)}}
+					{{JSON.parse(quiz.question[this.quiz_state].answer1)}}
 		</button><br/>
 
 		<button 	className="qAnswerButton" 
 					v-on:click="this.selectAnswer(2)">
 
-					{{JSON.parse(questionData[this.quiz_state].answer2)}}
+					{{JSON.parse(quiz.question[this.quiz_state].answer2)}}
 		</button><br/>
 
 		<button 	className="qAnswerButton" 
 					v-on:click="this.selectAnswer(3)">
 
-					{{JSON.parse(questionData[this.quiz_state].answer3)}}
+					{{JSON.parse(quiz.question[this.quiz_state].answer3)}}
 		</button><br/>
 
 		<button 	className="qAnswerButton" 
 					v-on:click="this.selectAnswer(4)">
 
-					{{JSON.parse(questionData[this.quiz_state].answer4)}}
+					{{JSON.parse(quiz.question[this.quiz_state].answer4)}}
 		</button><br/>
 	</div>
 </template>
@@ -34,8 +34,7 @@ export default {
 	name : 'QuizQuestionPage',
 
 	props : {
-		quizData : Object,
-		questionData : Array,
+		quiz: Object,
 	},
 
 	data(){
@@ -48,7 +47,7 @@ export default {
 	methods : {
 		selectAnswer(on){
 			this.quiz_answer[this.quiz_state] = on;
-			if(this.quiz_state >= this.questionData.length-1){
+			if(this.quiz_state >= this.quiz.question.length-1){
 				this.emitter.emit("completedQuiz",this.quiz_answer);
 			}else{
 				this.quiz_state += 1;

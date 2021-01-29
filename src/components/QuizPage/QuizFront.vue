@@ -1,9 +1,9 @@
 <template>
 	<div class="mpWrapper">
-		<div class="qTitle">{{JSON.parse(quizData.title)}}</div>
-		<span class="qStartMessage">{{JSON.parse(quizData.message_start)}}</span>
+		<div class="qTitle">{{JSON.parse(quiz.option.title)}}</div>
+		<span class="qStartMessage">{{JSON.parse(quiz.option.message_start)}}</span>
 		<span class="qQuestionCount">
-			You have to answer {{questionData.length}} questions and need to answer {{quizData.score_win}} to win
+			You have to answer {{quiz.question.length}} questions and need to answer {{quiz.option.score_win}} to win
 		</span>
 		<br/><br/>
 		<button class="qStartButton" v-on:click="this.emitter.emit('next')">Start Quiz</button>
@@ -11,12 +11,12 @@
 </template>
 
 <script>
+
 export default {
 	name : 'QuizFront',
 
 	props : {
-		quizData : Object,
-		questionData : Array,
-	}
+		quiz : Object,
+	},
 }
 </script>

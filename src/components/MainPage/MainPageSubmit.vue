@@ -6,7 +6,7 @@
 		</div>
 
 		<div v-if="showLink" class="submitLink">
-			Cool, your link is here: <a href={{resultLink}} rel="noreferrer" target="_blank">{{resultLink}}</a>
+			<router-link :to="this.resultLink" target="_blank">Cool, here's your link</router-link>
 		</div>
 	</div>
 </template>

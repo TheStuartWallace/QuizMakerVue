@@ -4,20 +4,18 @@
 		<Loading v-else-if="pageNavStatus == -1" />
 
 		<QuizFront 	
-			v-bind:quizData="this.quizData" 
-			v-bind:questionData="this.questionData" 
+			v-bind:quiz="this.quiz"
+			v-bind:quizData="this.quiz.options"
 			v-else-if="pageNavStatus == 0"
 		/>
 
 		<QuizQuestionPage
-			v-bind:quizData="this.quizData"
-			v-bind:questionData="this.questionData"
+			v-bind:quiz="this.quiz"
 			v-else-if="pageNavStatus == 1"
 		/>
 
 		<QuizResultPage 
-			v-bind:quizData="this.quizData"
-			v-bind:questionData="this.questionData"
+			v-bind:quiz="this.quiz"
 			v-bind:quiz_answer="this.quiz_answer"
 			v-bind:marks="this.marks"
 			v-bind:won="this.won"
@@ -29,7 +27,7 @@
 </template>
 
 <script>
-import firebase from '@/components/Firebase.js';
+import QuizMaker from '@/QuizMaker.js';
 import Loading from '@/components/Loading.vue';
 import QuizFront from '@/components/QuizPage/QuizFront.vue';
 import QuizQuestionPage from '@/components/QuizPage/QuizQuestionPage.vue';
@@ -49,19 +47,45 @@ export default {
 		return {
 			pageNavStatus : -1,
 			pageNavMax : 3,
+
 			id : this.$route.params.id,
-			questionData : [],
-			quizData : {},
+			quiz : undefined,
+
 			quiz_answer : [],
 			marks : [],
+			
 			won : false,
 			errorMessage : undefined,
 		}
 	},
 
 	created(){
-		this.getQuizData();
+		this.quiz = {
+			option : undefined,
+			question : undefined,
+		};
 
+		QuizMaker.getQuizOptions(this.id).then((data) => {
+			if(data === undefined){
+				this.errorMessage = "Error! No such quiz!"; 
+				this.pageNavStatus = -1;
+			}else{
+				this.quiz.option = data;
+			}
+		});
+
+		if(this.errorMessage === undefined){
+			QuizMaker.getQuizQuestions(this.id).then((data) => {
+			if(data === undefined){
+				this.errorMessage = "Error! Unable to load questions!"; 
+				this.pageNavStatus = -1;
+			}else{
+				this.quiz.question = data; 
+				this.emitter.emit("next");
+				}
+			});
+		}
+		
 		this.emitter.on("next",() => {
 			this.pageNavStatus += 1;
 		});
@@ -74,35 +98,16 @@ export default {
 	},
 
 	methods : {
-		async getQuizData(){
-
-			const quiz_data = await firebase.firestore().collection("quiz").doc(this.id).get();
-			if(!quiz_data.exists){
-				this.pageNavStatus = -1;
-				this.errorMessage = "Error! (This quiz does not exist)";
-				return;
-			}else{
-				this.quizData = quiz_data.data();
-				document.title = JSON.parse(this.quizData.title)+" - Quiz Maker";
-			}
-
-			const question_data = await firebase.firestore().collection("quiz").doc(this.id).collection("question").get();
-			this.questionData = question_data.docs.map(doc => doc.data());
-			
-
-			this.pageNavStatus = 0;
-		},
-
 		markAnswers(answersgiven){
 			let marks = [];
 			let right = 0;
-			for(let a=0; a<this.questionData.length; a++){
-				marks = marks.concat((answersgiven[a] === this.questionData[a].correct));
-				if(answersgiven[a] === this.questionData[a].correct) right = right + 1;
+			for(let a=0; a<this.quiz.question.length; a++){
+				marks = marks.concat((answersgiven[a] === this.quiz.question[a].correct));
+				if(answersgiven[a] === this.quiz.question[a].correct) right = right + 1;
 			}
 
 			this.marks = marks;
-			this.won = (right >= this.quizData.score_win);
+			this.won = (right >= this.quiz.option.score_win);
 		}
 	}
 }
